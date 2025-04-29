@@ -1,0 +1,6 @@
+.idea
+.venv
+dist
+orkes_conductor_mcp.egg-info/
+.python-version
+__pycache__/
