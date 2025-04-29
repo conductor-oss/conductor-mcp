@@ -1,0 +1,15 @@
+[project]
+name = "orkes-conductor-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "asyncio>=3.4.3",
+    "fastmcp>=2.2.5",
+    "freezegun>=1.5.1",
+    "httpx>=0.28.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+    "pytest-httpx>=0.35.0",
+]
