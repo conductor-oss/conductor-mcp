@@ -19,3 +19,13 @@ async def test_http_get(httpx_mock: HTTPXMock, monkeypatch):
     result = await http_proxy.http_get('somegarbagepath')
 
     assert result == 'test_response'
+
+@pytest.mark.asyncio
+async def test_http_post(httpx_mock: HTTPXMock, monkeypatch):
+    monkeypatch.setenv(CONDUCTOR_SERVER_URL, TEST_URL)
+    monkeypatch.setattr(token_manager, 'get_token', mock_token_retriever)
+    httpx_mock.add_response(url=TEST_URL + f'/somegarbageposturl', text='test_post_response')
+
+    result = await http_proxy.http_post('somegarbageposturl')
+
+    assert result == 'test_post_response'
