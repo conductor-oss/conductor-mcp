@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import httpx
+import logging
 import os
 import json
 from utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
@@ -29,5 +30,7 @@ async def get_token():
                 'keySecret': os.environ[CONDUCTOR_AUTH_SECRET]
             }))
         global _token
+        logging.debug(f'token_url: {token_url}')
+        logging.debug(f'response: {response}')
         _token = response.json()['token']
     return _token
