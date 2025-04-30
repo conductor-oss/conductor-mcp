@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import httpx
+import logging
 import os
 import json
 from utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
@@ -15,8 +16,8 @@ async def get_token():
     current_time = datetime.now()
     global _last_token_retrieval
     time_since_last_retrieval = current_time - _last_token_retrieval
-    print(f'current_time: {current_time}, _last_token_retrieval: {_last_token_retrieval}, time_since_last_retrieval: {time_since_last_retrieval}')
     if time_since_last_retrieval > TOKEN_LIFE_DURATION:
+        logging.info('Refreshing token')
         _last_token_retrieval = datetime.now()
         token_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], 'token')
         response = httpx.post(token_url,
