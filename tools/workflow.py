@@ -7,7 +7,7 @@ workflow_mcp = FastMCP("Workflow Service")
 
 
 @workflow_mcp.tool()
-async def get_workflow_metadata(workflow_id: str, ctx: Context) -> str:
+async def get_workflow_by_id(workflow_id: str) -> str:
     """Gets a conductor workflow metadata in json format based on that workflow's id
 
     Args:
