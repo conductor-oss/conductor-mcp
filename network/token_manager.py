@@ -9,10 +9,13 @@ from utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_
 _last_token_retrieval = datetime(1,1,1)
 TOKEN_LIFE_DURATION = timedelta(hours=2)
 
-# using os path join since urllib will overwrite the last path val if the trailing slash is missing.
 _token = 'UNASSIGNED'
 
 async def get_token():
+    """Retrieves and refreshes a JWT token required for making HTTP requests to Conductor
+
+    :return: JWT token based on auth key and secret pulled from the environment
+    """
     current_time = datetime.now()
     global _last_token_retrieval
     time_since_last_retrieval = current_time - _last_token_retrieval

@@ -26,6 +26,10 @@ async def test_http_post(httpx_mock: HTTPXMock, monkeypatch):
     monkeypatch.setattr(token_manager, 'get_token', mock_token_retriever)
     httpx_mock.add_response(url=TEST_URL + f'/somegarbageposturl', text='test_post_response')
 
-    result = await http_proxy.http_post('somegarbageposturl')
+    result = await http_proxy.http_post('somegarbageposturl', data={'middleEarth': {'shire': 'hobbiton'}}, additional_headers={'header1': 'header1Val'})
 
     assert result == 'test_post_response'
+
+    request = httpx_mock.get_request()
+    assert request.headers['header1'] == 'header1Val'
+    assert request.content == b'{"middleEarth": {"shire": "hobbiton"}}'
