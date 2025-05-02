@@ -64,6 +64,31 @@ wheels = [
 ]
 
 [[package]]
+name = "conductor-mcp"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "asyncio" },
+    { name = "fastmcp" },
+    { name = "freezegun" },
+    { name = "httpx" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-httpx" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "asyncio", specifier = ">=3.4.3" },
+    { name = "fastmcp", specifier = ">=2.2.5" },
+    { name = "freezegun", specifier = ">=1.5.1" },
+    { name = "httpx", specifier = ">=0.28.1" },
+    { name = "pytest", specifier = ">=8.3.5" },
+    { name = "pytest-asyncio", specifier = ">=0.26.0" },
+    { name = "pytest-httpx", specifier = ">=0.35.0" },
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.2"
 source = { registry = "https://pypi.org/simple" }
@@ -217,31 +242,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/02/2e/58d83848dd1a79cb92ed8e63f6ba901ca282c5f09d04af9423ec26c56fd7/openapi_pydantic-0.5.1.tar.gz", hash = "sha256:ff6835af6bde7a459fb93eb93bb92b8749b754fc6e51b2f1590a19dc3005ee0d", size = 60892 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/12/cf/03675d8bd8ecbf4445504d8071adab19f5f993676795708e36402ab38263/openapi_pydantic-0.5.1-py3-none-any.whl", hash = "sha256:a3a09ef4586f5bd760a8df7f43028b60cafb6d9f61de2acba9574766255ab146", size = 96381 },
-]
-
-[[package]]
-name = "orkes-conductor-mcp"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "asyncio" },
-    { name = "fastmcp" },
-    { name = "freezegun" },
-    { name = "httpx" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-httpx" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "asyncio", specifier = ">=3.4.3" },
-    { name = "fastmcp", specifier = ">=2.2.5" },
-    { name = "freezegun", specifier = ">=1.5.1" },
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "pytest", specifier = ">=8.3.5" },
-    { name = "pytest-asyncio", specifier = ">=0.26.0" },
-    { name = "pytest-httpx", specifier = ">=0.35.0" },
 ]
 
 [[package]]
