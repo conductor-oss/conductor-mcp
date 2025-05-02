@@ -19,7 +19,7 @@ from network import http_proxy
     ({'workflow_name': 'test3', 'idempotency_strategy': 'FAIL'}, ('workflow/test3?priority=0', {})),
     ({'workflow_name': 'test4', 'priority': '9', 'idempotency_key': 'azog'}, ('workflow/test4?priority=9', {'X-Idempotency-key': 'azog', 'X-on-conflict': 'RETURN_EXISTING'})),
     ({'workflow_name': 'test5', 'priority': '11', 'idempotency_key': 'azog', 'idempotency_strategy': 'FAIL'}, ('workflow/test5?priority=11', {'X-Idempotency-key': 'azog', 'X-on-conflict': 'FAIL'})),
-    ({'workflow_name': 'test6', 'correlation_id': '42'}, ('workflow/test6?priority=0;correlationId=42', {})),
+    ({'workflow_name': 'test6', 'correlation_id': '42'}, ('workflow/test6?priority=0&correlationId=42', {})),
 ])
 @pytest.mark.asyncio
 async def test_start_workflow_by_name(args, expected, monkeypatch):
