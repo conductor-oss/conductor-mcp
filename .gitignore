@@ -1,9 +1,10 @@
 .idea
 .venv
+
+# local development configuration
+local_development.py
+
 dist
 *.egg-info/
 .python-version
 __pycache__/
-
-# local development configuration
-local_development.py
