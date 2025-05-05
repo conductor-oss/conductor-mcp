@@ -16,10 +16,10 @@ workflow_mcp = FastMCP("Workflow Service")
 
 @workflow_mcp.tool()
 async def get_workflow_by_id(workflow_id: str) -> str:
-    """Gets a conductor workflow metadata in json format based on that workflow's id
+    """Gets a conductor workflow execution in json format based on the workflow's execution id
 
     Args:
-        workflow_id: The uuid representing the workflow id
+        workflow_id: The uuid representing the execution of the workflow
     """
     path = f'workflow/{workflow_id}?includeTasks=true&summarize=false'
     return await http_proxy.http_get(path)
@@ -47,3 +47,23 @@ async def start_workflow_by_name(workflow_name: str, correlation_id: str = None,
     path = f'workflow/{workflow_name}?priority={priority}{correlation_id_val}'
 
     return await http_proxy.http_post(path, data, additional_headers=additional_headers)
+
+
+@workflow_mcp.tool()
+async def get_workflow_by_name(workflow_name: str) -> str:
+    """Gets the metadata for a conductor workflow in json format based on that workflow's name
+
+    Args:
+        workflow_name: The name of the workflow
+    """
+    path = f'metadata/workflow?access=READ&metadata=true&name={workflow_name}&short=false'
+    return await http_proxy.http_get(path)
+
+
+@workflow_mcp.tool()
+async def get_all_workflows() -> str:
+    """Gets a short description of all existing conductor workflows.
+    """
+    path = 'metadata/workflow?short=true&metadata=true'
+    return await http_proxy.http_get(path)
+

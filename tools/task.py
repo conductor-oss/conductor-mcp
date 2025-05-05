@@ -60,7 +60,11 @@ async def get_all_task_definitions() -> str:
 
 @task_mcp.tool()
 async def get_task_definition_for_tasktype(taskType: str) -> str:
-    """Gets the task definition for the given taskType
+    """Gets the task definition for the given taskType.
+
+        "taskType" is synonymous with "task name".
+
+        This API refers to only user-defined tasks.
 
     Args:
         taskType: The string representing the desired tasks' taskType
