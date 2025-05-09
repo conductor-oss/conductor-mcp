@@ -6,12 +6,184 @@
 #  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
 #  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 #  specific language governing permissions and limitations under the License.
-from typing import Literal
-
+from typing import Literal, Dict, Any
 from fastmcp import FastMCP
 from network import http_proxy
 
 workflow_mcp = FastMCP("Workflow Service")
+
+
+
+@workflow_mcp.tool()
+async def create_workflow_definition(workflow_definition: Dict[str, Any]) -> str:
+    """Creates a workflow definition from the provided workflow_definition dict param.
+
+    These are the following constructs you should use:
+    1. Do_while : to run through a list (input _items as the input parameters to iterate)
+    2. Switch: decision task
+    3. Inline: Executes javascript inline
+
+    In order to access workflow variables in javascript functions, they must first be assigned a value via inputParameters,
+    for example:
+        if there's a task named "analyze_market_data" then to access its output in javascript you need to create an inputParameter to assign it a value that can be used:
+            "inputParameters": {
+                "marketData": "${analyze_market_data.output}"
+              }
+        Then the "${analyze_market_data.output}" value can be accessed in javascript as "marketData" like so:
+            "(function () {\\n  console.log("Market Data: " + $.marketData);\\n})();"
+
+    In switch cases, an expression field must be defined using the same input method as above. You can construct the expression field like this:
+            "inputParameters": {
+                "marketData": "${analyze_market_data.output}"
+            }
+            "expression": "(function () {\\n  $.marketData.includes("NASDAQ");\\n})();"
+
+    Here are some examples to help:
+        ## Example of a switch task to run conditional tasks
+        {
+          "name": "switch_case_example",
+          "description": "switch_case_example",
+          "version": 1,
+          "tasks": [
+            {
+              "name": "switch",
+              "taskReferenceName": "switch_ref",
+              "inputParameters": {
+                "switchCaseValue": "${workflow.input.case_param}"
+              },
+              "type": "SWITCH",
+              "decisionCases": {
+                "case_a": [
+                  {
+                    "name": "simple_1",
+                    "taskReferenceName": "simple_ref_1",
+                    "type": "SIMPLE"
+                  }
+                ],
+                "case_b": [
+                  {
+                    "name": "simple",
+                    "taskReferenceName": "simple_ref",
+                    "type": "SIMPLE"
+                  }
+                ]
+              },
+              "defaultCase": [
+                {
+                  "name": "simple_2",
+                  "taskReferenceName": "simple_ref_2",
+                  "type": "SIMPLE"
+                }
+              ],
+              "evaluatorType": "value-param"
+            }
+          ]
+        }
+
+        ## Example of a do_while for iterating over a list
+        {
+          "createTime": 1740724130693,
+          "name": "for_each_example",
+          "description": "for_each_example",
+          "version": 1,
+          "tasks": [
+            {
+              "name": "do_while",
+              "taskReferenceName": "do_while_ref",
+              "inputParameters": {
+                "items": "$ {workflow.input.items_list}"
+              },
+              "type": "DO_WHILE",
+              "loopOver": [
+                {
+                  "name": "simple",
+                  "taskReferenceName": "simple_ref",
+                  "inputParameters": {
+                    "item": "$ {do_while_ref.output.item}"
+                  },
+                  "type": "SIMPLE"
+                },
+                {
+                  "name": "simple_1",
+                  "taskReferenceName": "simple_ref_1",
+                  "inputParameters": {
+                    "item_to_process": "$ {do_while_ref.output.item}"
+                  },
+                  "type": "SIMPLE"
+                }
+              ],
+              "evaluatorType": "value-param"
+            }
+          ]
+        }
+
+        ## Example of an inline javascript execution
+        {
+          "name": "inline_javascript_execution",
+          "version": 1,
+          "tasks": [
+            {
+              "name": "inline",
+              "taskReferenceName": "inline_ref",
+              "type": "INLINE",
+              "inputParameters": {
+                "expression": "(function () {\\n  return $.value1 + $.value2;\\n})();",
+                "evaluatorType": "graaljs",
+                "value1": 1,
+                "value2": 2
+              }
+            }
+          ]
+        }
+
+        notice, that the javscript function is written as:
+        (function () {
+          return $.value1 + $.value2;
+        })();
+        and value1 and value2 are the input to the task.
+
+        Note: Do NOT use loopCondition, always iterate over the list of items using items input parameter. Nest SWITCH task if you want to do conditional processing.
+
+        ## Wiring inputs and outputs to the task.
+        The input of the workflow or the output of a task can be wired as input parameters to other tasks.
+        You can do that using ${workflow.input.fieldname} or ${task_ref_name.output.field_name} syntax. Use task's reference name when using the task's output.
+        Conductor uses JSON as input and outputs and you can use JSON Path to extract specific fields from the output or workflow input if required.
+
+        ## Rules
+        taskReferenceName MUST be unique in the workflow JSON.
+        When using INLINE task, all the variables in the script MUST be the input parameters to the task.  Only task's input parameters can be accessed inside the script.
+        When trying to update a workflow that's already been created you must increment the version number, otherwise you need to pick a unique name for the workflow.
+
+        ### SWITCH task rules:
+        When using SWITCH task, the switchCaseValue _cannot_ contain expressions, scripts or methods.  It has to be simple map.  Use expression field to execute a script if required.
+        Remember, switchCaseValue and expression fields in SWITCH are mutually exclusive.  ONLY one of them can be used. expression is NOT an input field, it is set as a property to the task.
+        expression MUST be a javascript function that returns a single string.  Similar to INLINE task.  The function is IIFE type, which is a JavaScript function that is defined and executed immediately.
+        When writing SWITCH task remember to consider all the cases, if required use defaultCase to handle default cases and the ones for which no clear branches are defined.
+        one more thing -- SWITCH task does not produce output, so do not use the output of a switch as an input to any task.
+
+        ## Inline javascript rules
+        We use GraalVM to evaluate javascript code.  Keep to basics.  Do not use any advanced features and whenever possible just use basic javascript.
+        Do not use concat function to merge arrays or maps etc.
+        You can ONLY use the variables defined as input to the task in the javascript code.  Access them as $.var.
+        Note, you _CANNOT_ use ${task.output.var} in javascript. neither in inline or Switch task expressions. Only $.var and var MUST be an input parameter to the task.
+        In order to address any inputs to the workflow or tasks, you must be sure to first assign that input to an input parameter, which then can be referenced -
+            for instance, in order to use ${workflow.input.case_param} in javascript, you must make sure the inputParameters assigns that to a variable in the task definition,
+            such as:
+              "inputParameters": {
+                "switchCaseValue": "${workflow.input.case_param}"
+              },
+            once that value is assigned to switchCaseValue via the inputParameters section of the task definition, it can be addressed in javascript as $.switchCaseValue
+
+        ## Input mapping rules
+        * The task's input and output is always a Map data type.  If a task's schema returns List or a single value as output, it is wrapped in a map with key "result"
+        * For HTTP task's the output is in "response" key
+
+    Args:
+        workflow_definition: A nested dictionary representing a workflow definition
+    """
+    path = f'metadata/workflow?overwrite=false'
+    return await http_proxy.http_post(path, data=workflow_definition)
+
 
 @workflow_mcp.tool()
 async def query_workflow_executions(query: str) -> str:
@@ -40,7 +212,6 @@ async def query_workflow_executions(query: str) -> str:
             startTime: The start unix timestamp of a workflow.
             status: The status of a workflow execution. One of [RUNNING, PAUSED, COMPLETED, TIMED_OUT, TERMINATED, FAILED].
             endTime: The end unix timestamp of a workflow.
-            priority: The priority (integer) of a workflow.
     """
     path = f'workflow/search?query={query}'
     return await http_proxy.http_get(path)
