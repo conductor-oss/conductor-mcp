@@ -6,13 +6,45 @@
 #  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
 #  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 #  specific language governing permissions and limitations under the License.
-
 from typing import Literal
 
 from fastmcp import FastMCP
 from network import http_proxy
 
 workflow_mcp = FastMCP("Workflow Service")
+
+@workflow_mcp.tool()
+async def query_workflow_executions(query: str) -> str:
+    """Search for workflow (executions) based on payload and other parameters.
+    The query parameter accepts exact matches using = and AND operators on the following fields: workflowId, correlationId, workflowType, and status.
+    Matches using = can be written as taskType = HTTP. Matches using IN are written as status IN (SCHEDULED, IN_PROGRESS).
+    The 'startTime' and 'modifiedTime' field uses unix timestamps and accepts queries using < and >, for example startTime < 1696143600000.
+    Queries can be combined using AND, for example taskType = HTTP AND status = SCHEDULED
+
+    If no query kwargs are provided, all workflow executions will be returned.
+
+    Example call to this function to query for a status of FAILED and start time after Thu May 01 2025 22:20:59 GMT+0000:
+        query_workflow_executions('status="FAILED" AND startTime > 1746138025 ')
+
+    Searching for a range of time does not work, i.e. "startTime > 0 AND startTime < 1746138025"
+
+    Example call for FAILED or COMPLETED status and workflow named "SimpleWorkflow":
+        query_workflow_executions('status IN (FAILED, COMPLETED) AND workflowType="SimpleWorkflow"')
+
+    Args:
+        query: A query string, utilizing any of the following fields.
+            workflowId: The id of a workflow execution.
+            correlationId: The correlationId used to create any workflow executions.
+            workflowType: Synonymous with workflow name.
+            createTime: The creation unix timestamp of a workflow.
+            startTime: The start unix timestamp of a workflow.
+            status: The status of a workflow execution. One of [RUNNING, PAUSED, COMPLETED, TIMED_OUT, TERMINATED, FAILED].
+            endTime: The end unix timestamp of a workflow.
+            priority: The priority (integer) of a workflow.
+    """
+    path = f'workflow/search?query={query}'
+    return await http_proxy.http_get(path)
+
 
 @workflow_mcp.tool()
 async def get_workflow_by_id(workflow_id: str) -> str:
