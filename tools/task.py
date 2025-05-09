@@ -13,6 +13,7 @@ from network.http_proxy import http_get
 
 task_mcp = FastMCP("Task Service")
 
+
 @task_mcp.tool()
 async def get_task_by_id(task_id: str, ctx: Context) -> str:
     """Gets the metadata for a conductor workflow task in json format based on that task's id
@@ -20,8 +21,9 @@ async def get_task_by_id(task_id: str, ctx: Context) -> str:
     Args:
         task_id: The uuid representing the task id
     """
-    path = f'tasks/{task_id}'
+    path = f"tasks/{task_id}"
     return await http_get(path)
+
 
 @task_mcp.tool()
 async def get_task_logs_by_id(task_id: str) -> str:
@@ -30,15 +32,16 @@ async def get_task_logs_by_id(task_id: str) -> str:
     Args:
         task_id: The uuid representing the task id
     """
-    path = f'tasks/{task_id}/log'
+    path = f"tasks/{task_id}/log"
     return await http_get(path)
+
 
 @task_mcp.tool()
 async def get_task_queue_details() -> str:
-    """Gets the current status details for all conductor workflow task queues
-    """
-    path = 'tasks/queue/all'
+    """Gets the current status details for all conductor workflow task queues"""
+    path = "tasks/queue/all"
     return await http_get(path)
+
 
 @task_mcp.tool()
 async def get_pending_tasks_for_tasktype(taskType: str, start=0) -> str:
@@ -48,15 +51,16 @@ async def get_pending_tasks_for_tasktype(taskType: str, start=0) -> str:
         taskType: The string representing the desired tasks' taskType
         start: The index of the first item to return for pagination
     """
-    path = f'admin/task/{taskType}?start={start}&count=100'
+    path = f"admin/task/{taskType}?start={start}&count=100"
     return await http_get(path)
+
 
 @task_mcp.tool()
 async def get_all_task_definitions() -> str:
-    """Gets all task definitions
-    """
-    path = 'metadata/taskdefs?access=READ&metadata=false'
+    """Gets all task definitions"""
+    path = "metadata/taskdefs?access=READ&metadata=false"
     return await http_get(path)
+
 
 @task_mcp.tool()
 async def get_task_definition_for_tasktype(taskType: str) -> str:
@@ -69,8 +73,9 @@ async def get_task_definition_for_tasktype(taskType: str) -> str:
     Args:
         taskType: The string representing the desired tasks' taskType
     """
-    path = f'metadata/taskdefs/{taskType}?metadata=false'
+    path = f"metadata/taskdefs/{taskType}?metadata=false"
     return await http_get(path)
+
 
 @task_mcp.tool()
 async def get_metrics_for_task(task_name: str, start=0) -> str:
@@ -80,5 +85,5 @@ async def get_metrics_for_task(task_name: str, start=0) -> str:
         task_name: The name of the task to provide metrics for
         start: The index of the first item to return for pagination
     """
-    path = f'metrics/task/{task_name}?start={start}&end={start + 20}&step=1'
+    path = f"metrics/task/{task_name}?start={start}&end={start + 20}&step=1"
     return await http_get(path)
