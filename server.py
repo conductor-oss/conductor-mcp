@@ -14,12 +14,12 @@ from tools.workflow import workflow_mcp
 import sys
 import local_development
 
-mcp = FastMCP('oss-conductor')
-mcp.mount('workflow', workflow_mcp)
-mcp.mount('task', task_mcp)
+mcp = FastMCP("oss-conductor")
+mcp.mount("workflow", workflow_mcp)
+mcp.mount("task", task_mcp)
 
-if __name__ == '__main__':
-    if 'local_dev' in sys.argv:
+if __name__ == "__main__":
+    if "local_dev" in sys.argv:
         local_development.initialize()
     # Initialize and run the server
-    mcp.run(transport='stdio')
+    mcp.run(transport="stdio")

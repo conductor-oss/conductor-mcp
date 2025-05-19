@@ -21,5 +21,8 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
 
+      - name: "Lint"
+        run: uv run black --check ./
+
       - name: Run tests
         run: uv run pytest test
