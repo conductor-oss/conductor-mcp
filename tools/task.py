@@ -75,15 +75,3 @@ async def get_task_definition_for_tasktype(taskType: str) -> str:
     """
     path = f"metadata/taskdefs/{taskType}?metadata=false"
     return await http_get(path)
-
-
-@task_mcp.tool()
-async def get_metrics_for_task(task_name: str, start=0) -> str:
-    """Gets the metrics for the given task_name
-
-    Args:
-        task_name: The name of the task to provide metrics for
-        start: The index of the first item to return for pagination
-    """
-    path = f"metrics/task/{task_name}?start={start}&end={start + 20}&step=1"
-    return await http_get(path)
