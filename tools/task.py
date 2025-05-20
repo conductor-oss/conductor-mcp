@@ -26,32 +26,9 @@ async def get_task_by_id(task_id: str, ctx: Context) -> str:
 
 
 @task_mcp.tool()
-async def get_task_logs_by_id(task_id: str) -> str:
-    """Gets the execution logs for a conductor workflow task in json format based on that task's id
-
-    Args:
-        task_id: The uuid representing the task id
-    """
-    path = f"tasks/{task_id}/log"
-    return await http_get(path)
-
-
-@task_mcp.tool()
 async def get_task_queue_details() -> str:
     """Gets the current status details for all conductor workflow task queues"""
     path = "tasks/queue/all"
-    return await http_get(path)
-
-
-@task_mcp.tool()
-async def get_pending_tasks_for_tasktype(taskType: str, start=0) -> str:
-    """Gets the list of pending tasks based on taskType
-
-    Args:
-        taskType: The string representing the desired tasks' taskType
-        start: The index of the first item to return for pagination
-    """
-    path = f"admin/task/{taskType}?start={start}&count=100"
     return await http_get(path)
 
 
