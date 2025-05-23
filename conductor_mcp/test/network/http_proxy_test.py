@@ -9,9 +9,8 @@
 
 import pytest
 from pytest_httpx import HTTPXMock
-from network import http_proxy
-from network import token_manager
-from utils.constants import CONDUCTOR_SERVER_URL
+from conductor_mcp.network import http_proxy, token_manager
+from conductor_mcp.utils.constants import CONDUCTOR_SERVER_URL
 
 
 TEST_URL = "https://some_test_url/api"

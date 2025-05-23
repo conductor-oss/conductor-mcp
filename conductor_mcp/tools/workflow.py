@@ -8,7 +8,7 @@
 #  specific language governing permissions and limitations under the License.
 from typing import Literal, Dict, Any
 from fastmcp import FastMCP
-from network import http_proxy
+from conductor_mcp.network import http_proxy
 
 workflow_mcp = FastMCP("Workflow Service")
 

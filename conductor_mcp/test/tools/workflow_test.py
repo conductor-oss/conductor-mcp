@@ -9,8 +9,8 @@
 
 import pytest
 from unittest.mock import AsyncMock
-from tools import workflow
-from network import http_proxy
+from conductor_mcp.tools import workflow
+from conductor_mcp.network import http_proxy
 
 
 # workflow_name: str, correlation_id: str = None, priority=0 , idempotency_strategy: Literal['RETURN_EXISTING', 'FAIL', 'FAIL_ON_RUNNING'] = 'RETURN_EXISTING', idempotency_key:str = None, data={}) -> str:

@@ -58,6 +58,8 @@ configuration, with or without the `local_dev` argument:
 ```
 After adding this configuration, Claude must be restarted to pick up the new MCP server.
 
+> Note: alternatively you can use the absolute path to the project root and use 'conductor-mcp' instead of 'server.py'
+
 # Adding to Cursor
 The main Cursor instructions are [here](https://docs.cursor.com/context/model-context-protocol).
 Go to `Cursor -> Settings -> Cursor Settings -> MCP` and select "+ Add new global MCP server".

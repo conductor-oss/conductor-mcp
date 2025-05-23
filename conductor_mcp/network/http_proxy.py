@@ -12,8 +12,8 @@ import logging
 import httpx
 import os
 from typing import Dict, Any
-from network import token_manager
-from utils.constants import CONDUCTOR_SERVER_URL
+from conductor_mcp.network import token_manager
+from conductor_mcp.utils.constants import CONDUCTOR_SERVER_URL
 
 
 logging.basicConfig(

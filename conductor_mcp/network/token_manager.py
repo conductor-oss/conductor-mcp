@@ -12,7 +12,7 @@ import httpx
 import logging
 import os
 import json
-from utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
+from conductor_mcp.utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
 
 
 _last_token_retrieval = datetime(1, 1, 1)
