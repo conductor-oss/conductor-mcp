@@ -60,6 +60,27 @@ After adding this configuration, Claude must be restarted to pick up the new MCP
 
 > Note: alternatively you can use the absolute path to the project root and use 'conductor-mcp' instead of 'server.py'
 
+## Global install
+If you installed the package globally, i.e. from pypi:
+```commandline
+pip install conductor-mcp
+```
+then you can point to the system install in your Claude config:
+
+```json
+{
+  "mcpServers": {
+    "conductor": {
+      "command": "conductor-mcp",
+      "args": [
+        "local_dev"
+      ]
+    }
+  }
+}
+```
+
+
 # Adding to Cursor
 The main Cursor instructions are [here](https://docs.cursor.com/context/model-context-protocol).
 Go to `Cursor -> Settings -> Cursor Settings -> MCP` and select "+ Add new global MCP server".
