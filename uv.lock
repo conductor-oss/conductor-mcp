@@ -85,11 +85,12 @@ wheels = [
 
 [[package]]
 name = "conductor-mcp"
-version = "0.1.0"
+version = "0.1.4"
 source = { editable = "." }
 dependencies = [
     { name = "asyncio" },
     { name = "black" },
+    { name = "click" },
     { name = "fastmcp" },
     { name = "freezegun" },
     { name = "httpx" },
@@ -102,6 +103,7 @@ dependencies = [
 requires-dist = [
     { name = "asyncio", specifier = ">=3.4.3" },
     { name = "black", specifier = ">=25.1.0" },
+    { name = "click", specifier = ">=8.1.8" },
     { name = "fastmcp", specifier = ">=2.2.5" },
     { name = "freezegun", specifier = ">=1.5.1" },
     { name = "httpx", specifier = ">=0.28.1" },
