@@ -13,8 +13,8 @@ import pytest
 import datetime
 from freezegun import freeze_time
 from pytest_httpx import HTTPXMock
-from network import token_manager
-from utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
+from conductor_mcp.network import token_manager
+from conductor_mcp.utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
 
 TEST_URL = "https://orkestest.io/api"
 TEST_WORKFLOW_ID = "specialtestworkflowid"

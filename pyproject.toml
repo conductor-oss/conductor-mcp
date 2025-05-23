@@ -28,3 +28,10 @@ line-length = 120
 target-version = ['py37']
 include = '\.pyi?$'
 exclude = 'venv|local_development.py'
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+conductor-mcp = "conductor_mcp.server:run"

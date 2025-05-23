@@ -8,7 +8,7 @@
 #  specific language governing permissions and limitations under the License.
 
 from fastmcp import FastMCP, Context
-from network.http_proxy import http_get
+from conductor_mcp.network.http_proxy import http_get
 
 
 task_mcp = FastMCP("Task Service")
