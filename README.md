@@ -32,14 +32,14 @@ This is particularly useful where you don't have control over the environment, i
     os.environ[CONDUCTOR_AUTH_KEY] = '<YOUR_APPLICATION_AUTH_KEY>'
     os.environ[CONDUCTOR_AUTH_SECRET] = '<YOUR_APPLICATION_SECRET_KEY>'
 ```
-To run with local development add 'local_dev' to the server arguments:
+To run with local development add '--local_dev' to the server arguments:
 ```commandline
-uv run server.py local_dev
+uv run server.py --local_dev
 ```
 > Note: the `/api` path is required as part of the CONDUCTOR_SERVER_URL for most applications
 # Adding to Claude
 Follow [this tutorial](https://modelcontextprotocol.io/quickstart/user) for adding the mcp server to claude, and use the following
-configuration, with or without the `local_dev` argument:
+configuration, with or without the `--local_dev` argument:
 ```json
 {
   "mcpServers": {
@@ -50,7 +50,7 @@ configuration, with or without the `local_dev` argument:
         "/<YOUR ABSOLUTE PATH TO THE DIRECTORY CONTAINING server.py>",
         "run",
         "server.py",
-        "local_dev"
+        "--local_dev"
       ]
     }
   }
@@ -65,19 +65,33 @@ If you installed the package globally, i.e. from pypi:
 ```commandline
 pip install conductor-mcp
 ```
-then you can point to the system install in your Claude config:
+then you can point to the system install in your Claude config, but first you must create a json config file for your conductor values:
 
+```json
+{
+  "CONDUCTOR_SERVER_URL": "https://developer.orkescloud.com/api",
+  "CONDUCTOR_AUTH_KEY": "<YOUR_APPLICATION_AUTH_KEY>",
+  "CONDUCTOR_AUTH_SECRET": "<YOUR_APPLICATION_SECRET_KEY>"
+}
+```
+Claude config:
 ```json
 {
   "mcpServers": {
     "conductor": {
       "command": "conductor-mcp",
       "args": [
-        "local_dev"
+        "--config",
+        "<ABSOLUTE PATH TO A JSON CONFIG FILE>"
       ]
     }
   }
 }
+```
+
+You can also just the server from the command line on its own after installing through pip:
+```commandline
+conductor-mcp --config YOUR_CONFIG_FILE
 ```
 
 
