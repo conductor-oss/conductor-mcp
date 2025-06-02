@@ -9,7 +9,7 @@ an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express o
 specific language governing permissions and limitations under the License.
 -->
 # oss-conductor-mcp
-Model Context Protocol server for OSS Conductor.
+Model Context Protocol server for Conductor.
 
 # Running the server
 This project relies on `uv` https://docs.astral.sh/uv/getting-started/
@@ -89,7 +89,7 @@ Claude config:
 }
 ```
 
-You can also just the server from the command line on its own after installing through pip:
+You can also start the server from the command line on its own after installing through pip:
 ```commandline
 conductor-mcp --config YOUR_CONFIG_FILE
 ```
