@@ -11,62 +11,16 @@ specific language governing permissions and limitations under the License.
 # oss-conductor-mcp
 Model Context Protocol server for Conductor.
 
-# Running the server
-This project relies on `uv` https://docs.astral.sh/uv/getting-started/
+This package is used to run an MCP server that is capable of interacting with a Conductor instance. It provides tools
+for the basic operations that may be needed by an MCP client for Workflow creation, execution, and analysis.
 
-Create venv (not entirely necessary, since `uv` automatically creates and uses the virtual environment on its own when running other commands)
-```commandline
-uv sync
-source .venv/bin/activate
-```
-Run Server
-```commandline
-uv run server.py
-```
----
-For local development, a `local_development.py` file is provided for convenience for setting environment variables explicitly.
-
-This is particularly useful where you don't have control over the environment, i.e. running in Claude.
-```
-    os.environ[CONDUCTOR_SERVER_URL] = 'https://developer.orkescloud.com/api'
-    os.environ[CONDUCTOR_AUTH_KEY] = '<YOUR_APPLICATION_AUTH_KEY>'
-    os.environ[CONDUCTOR_AUTH_SECRET] = '<YOUR_APPLICATION_SECRET_KEY>'
-```
-To run with local development add '--local_dev' to the server arguments:
-```commandline
-uv run server.py --local_dev
-```
-> Note: the `/api` path is required as part of the CONDUCTOR_SERVER_URL for most applications
-# Adding to Claude
-Follow [this tutorial](https://modelcontextprotocol.io/quickstart/user) for adding the mcp server to claude, and use the following
-configuration, with or without the `--local_dev` argument:
-```json
-{
-  "mcpServers": {
-    "conductor": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/<YOUR ABSOLUTE PATH TO THE DIRECTORY CONTAINING server.py>",
-        "run",
-        "server.py",
-        "--local_dev"
-      ]
-    }
-  }
-}
-```
-After adding this configuration, Claude must be restarted to pick up the new MCP server.
-
-> Note: alternatively you can use the absolute path to the project root and use 'conductor-mcp' instead of 'server.py'
-
-## Global install
-If you installed the package globally, i.e. from pypi:
+# PyPi Quickstart
+## Install package
 ```commandline
 pip install conductor-mcp
 ```
-then you can point to the system install in your Claude config, but first you must create a json config file for your conductor values:
 
+## Create a JSON config with your Conductor keys
 ```json
 {
   "CONDUCTOR_SERVER_URL": "https://developer.orkescloud.com/api",
@@ -74,7 +28,9 @@ then you can point to the system install in your Claude config, but first you mu
   "CONDUCTOR_AUTH_SECRET": "<YOUR_APPLICATION_SECRET_KEY>"
 }
 ```
-Claude config:
+> Note: the `/api` path is required as part of the CONDUCTOR_SERVER_URL for most applications
+
+## Plug the server into an AI Agent, such as Claude or Cursor
 ```json
 {
   "mcpServers": {
@@ -88,16 +44,60 @@ Claude config:
   }
 }
 ```
+You should now be able to interact with Conductor via your AI Agent.
 
-You can also start the server from the command line on its own after installing through pip:
-```commandline
-conductor-mcp --config YOUR_CONFIG_FILE
-```
+### Adding to Claude
+You can find instructions for adding to Claude [here](https://modelcontextprotocol.io/quickstart/user#2-add-the-filesystem-mcp-server).
+In general, you just add the `mcpServers` config (above) to your Claude config (or create it if it doesn't exist). For
+instance, on Mac it might be `~/Library/Application\ Support/Claude/claude_desktop_config.json`.
 
-
-# Adding to Cursor
+### Adding to Cursor
 The main Cursor instructions are [here](https://docs.cursor.com/context/model-context-protocol).
 Go to `Cursor -> Settings -> Cursor Settings -> MCP` and select "+ Add new global MCP server".
 
 Here you can add the exact same configuration file shown in the example for Claude (above).
 You can then access the AI chat feature and explore the MCP server in the [sidebar with ⌘+L (Mac) or Ctrl+L (Windows/Linux)](https://docs.cursor.com/chat/overview).
+
+## Example prompts
+### Get Flight Risk Info
+```text
+Create and execute a Conductor Workflow that calls any necessary http endpoints to gather current weather data around
+Seattle and outputs the risk factors for flying a small airplane around the South Lake Union area using Visual Flight
+Rules today. Only use publicly available endpoints that don't require an API key.
+```
+### Notify Stocks
+(May require API Keys)
+```text
+Create a Conductor Workflow that runs on a daily schedule, accepts a list of email address and a stock symbol, checks
+current stock prices, and sends an email to everyone on the list if they should be happy or sad today based on stock
+performance. Name the workflow "NotifyStonks" and use schemaVersion 2.
+```
+
+# GitHub Quickstart
+## Clone GitHub Repo
+```commandline
+gh repo clone conductor-oss/conductor-mcp
+```
+
+This project relies on `uv` https://docs.astral.sh/uv/getting-started/
+
+## Create venv
+(not entirely necessary, since `uv` automatically creates and uses the virtual environment on its own when running other commands)
+```commandline
+uv sync
+source .venv/bin/activate
+```
+## Define Env Vars
+You can continue to use a JSON config file and the `--config` flag, or if the server is running in an environment where
+you have control over the environment variables the MCP server will look for them there if a config file is not
+provided.
+```commandline
+export CONDUCTOR_SERVER_URL="YOUR_CONDUCTOR_SERVER_URL"
+export CONDUCTOR_AUTH_KEY="<YOUR_APPLICATION_AUTH_KEY>"
+export CONDUCTOR_AUTH_SECRET="<YOUR_APPLICATION_SECRET_KEY>"
+```
+## Run Server
+```commandline
+uv run server.py
+```
+> Note: a `local_development.py` also exists for setting env vars and will be used when the `--local_dev` flag is set.
