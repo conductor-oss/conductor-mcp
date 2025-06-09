@@ -96,8 +96,27 @@ export CONDUCTOR_SERVER_URL="YOUR_CONDUCTOR_SERVER_URL"
 export CONDUCTOR_AUTH_KEY="<YOUR_APPLICATION_AUTH_KEY>"
 export CONDUCTOR_AUTH_SECRET="<YOUR_APPLICATION_SECRET_KEY>"
 ```
-## Run Server
+## Configure Your AI Assistant
+```json
+{
+  "mcpServers": {
+    "conductor": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "<ABSOLUTE_PATH_TO_THE_PROJECT>",
+        "run",
+        "conductor-mcp",
+        "--config",
+        "<ABSOLUTE PATH TO A JSON CONFIG FILE>"
+      ]
+    }
+  }
+}
+```
+### Or Run Server Directly
 ```commandline
-uv run server.py
+cd <PROJECT_ROOT>
+uv run conductor-mcp --config <ABSOLUTE PATH TO A JSON CONFIG FILE>
 ```
 > Note: a `local_development.py` also exists for setting env vars and will be used when the `--local_dev` flag is set.
