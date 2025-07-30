@@ -228,10 +228,10 @@ async def get_workflow_by_id(workflow_id: str) -> str:
 async def start_workflow_by_name(
     workflow_name: str,
     correlation_id: str = None,
-    priority=0,
+    priority: int = 0,
     idempotency_strategy: Literal["RETURN_EXISTING", "FAIL", "FAIL_ON_RUNNING"] = "RETURN_EXISTING",
     idempotency_key: str = None,
-    data={},
+    data: Dict[str, Any] = {},
 ) -> str:
     """Starts a new execution of a conductor workflow by its name
 
