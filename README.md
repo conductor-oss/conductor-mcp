@@ -8,7 +8,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 -->
-# oss-conductor-mcp
+# Conductor mcp server
 Model Context Protocol server for Conductor.
 
 This package is used to run an MCP server that is capable of interacting with a Conductor instance. It provides tools
