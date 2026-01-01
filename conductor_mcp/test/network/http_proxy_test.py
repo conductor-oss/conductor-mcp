@@ -46,3 +46,48 @@ async def test_http_post(httpx_mock: HTTPXMock, monkeypatch):
     request = httpx_mock.get_request()
     assert request.headers["header1"] == "header1Val"
     assert request.content == b'{"middleEarth": {"shire": "hobbiton"}}'
+
+
+@pytest.mark.asyncio
+async def test_http_put_with_data(httpx_mock: HTTPXMock, monkeypatch):
+    monkeypatch.setenv(CONDUCTOR_SERVER_URL, TEST_URL)
+    monkeypatch.setattr(token_manager, "get_token", mock_token_retriever)
+    httpx_mock.add_response(url=TEST_URL + f"/somegarbageputurl", text="test_put_response")
+
+    result = await http_proxy.http_put(
+        "somegarbageputurl", data={"key": "value"}
+    )
+
+    assert result == "test_put_response"
+
+    request = httpx_mock.get_request()
+    assert request.method == "PUT"
+    assert request.content == b'{"key": "value"}'
+
+
+@pytest.mark.asyncio
+async def test_http_put_without_data(httpx_mock: HTTPXMock, monkeypatch):
+    monkeypatch.setenv(CONDUCTOR_SERVER_URL, TEST_URL)
+    monkeypatch.setattr(token_manager, "get_token", mock_token_retriever)
+    httpx_mock.add_response(url=TEST_URL + f"/workflow/123/pause", text="paused")
+
+    result = await http_proxy.http_put("workflow/123/pause")
+
+    assert result == "paused"
+
+    request = httpx_mock.get_request()
+    assert request.method == "PUT"
+
+
+@pytest.mark.asyncio
+async def test_http_delete(httpx_mock: HTTPXMock, monkeypatch):
+    monkeypatch.setenv(CONDUCTOR_SERVER_URL, TEST_URL)
+    monkeypatch.setattr(token_manager, "get_token", mock_token_retriever)
+    httpx_mock.add_response(url=TEST_URL + f"/workflow/123", text="deleted")
+
+    result = await http_proxy.http_delete("workflow/123")
+
+    assert result == "deleted"
+
+    request = httpx_mock.get_request()
+    assert request.method == "DELETE"
