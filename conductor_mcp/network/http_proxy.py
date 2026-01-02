@@ -57,3 +57,47 @@ async def http_post(resource_path: str, data: Dict[str, Any] = {}, additional_he
         data=json.dumps(data),
     )
     return response.text
+
+
+async def http_put(resource_path: str, data: Dict[str, Any] = None, additional_headers: Dict[str, str] = {}):
+    """Executes token-authenticated HTTP PUT requests to the provided URL
+
+    :param resource_path: The resource path to apply to the server's API endpoint
+    :param data: A dictionary containing any arguments to pass as part of the PUT request (optional)
+    :param additional_headers: A dictionary containing any additional key/values to add to the headers of the request
+    :return: The results of the PUT request
+    """
+    full_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], resource_path)
+    logging.debug(f"Requesting url: {full_url}")
+    token = await token_manager.get_token()
+    headers = {
+        "X-Authorization": token,
+        "Content-Type": "application/json; charset=utf-8",
+        **additional_headers,
+    }
+    if data is not None:
+        response = httpx.put(full_url, headers=headers, data=json.dumps(data))
+    else:
+        response = httpx.put(full_url, headers=headers)
+    return response.text
+
+
+async def http_delete(resource_path: str, additional_headers: Dict[str, str] = {}):
+    """Executes token-authenticated HTTP DELETE requests to the provided URL
+
+    :param resource_path: The resource path to apply to the server's API endpoint
+    :param additional_headers: A dictionary containing any additional key/values to add to the headers of the request
+    :return: The results of the DELETE request
+    """
+    full_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], resource_path)
+    logging.debug(f"Requesting url: {full_url}")
+    token = await token_manager.get_token()
+    response = httpx.delete(
+        full_url,
+        headers={
+            "X-Authorization": token,
+            "Content-Type": "application/json; charset=utf-8",
+            **additional_headers,
+        },
+    )
+    return response.text

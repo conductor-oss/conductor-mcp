@@ -6,9 +6,10 @@
 #  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
 #  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
 #  specific language governing permissions and limitations under the License.
-from typing import Literal, Dict, Any
+from typing import Literal, Dict, Any, Optional
 from fastmcp import FastMCP
 from conductor_mcp.network import http_proxy
+from conductor_mcp.network.http_proxy import http_put, http_delete, http_post
 
 workflow_mcp = FastMCP("Workflow Service")
 
@@ -272,3 +273,62 @@ async def get_all_workflows() -> str:
     """Gets a short description of all existing conductor workflows."""
     path = "metadata/workflow?short=true&metadata=true"
     return await http_proxy.http_get(path)
+
+
+@workflow_mcp.tool()
+async def pause_workflow(workflow_id: str) -> str:
+    """Pauses a running workflow execution. The workflow will pause and can be resumed later.
+
+    Args:
+        workflow_id: The uuid representing the execution of the workflow to pause
+    """
+    path = f"workflow/{workflow_id}/pause"
+    return await http_put(path)
+
+
+@workflow_mcp.tool()
+async def resume_workflow(workflow_id: str) -> str:
+    """Resumes a paused workflow execution. The workflow will continue from where it was paused.
+
+    Args:
+        workflow_id: The uuid representing the execution of the workflow to resume
+    """
+    path = f"workflow/{workflow_id}/resume"
+    return await http_put(path)
+
+
+@workflow_mcp.tool()
+async def terminate_workflow(workflow_id: str, reason: Optional[str] = None) -> str:
+    """Terminates a workflow execution. This will stop the workflow and mark it as terminated.
+
+    Args:
+        workflow_id: The uuid representing the execution of the workflow to terminate
+        reason: Optional reason for termination
+    """
+    reason_param = f"?reason={reason}" if reason else ""
+    path = f"workflow/{workflow_id}{reason_param}"
+    return await http_delete(path)
+
+
+@workflow_mcp.tool()
+async def restart_workflow(workflow_id: str, use_latest_definitions: bool = False) -> str:
+    """Restarts a workflow execution from the beginning. This creates a new execution with the same input.
+
+    Args:
+        workflow_id: The uuid representing the execution of the workflow to restart
+        use_latest_definitions: If True, use the latest workflow definition instead of the original version
+    """
+    path = f"workflow/{workflow_id}/restart?useLatestDefinitions={str(use_latest_definitions).lower()}"
+    return await http_post(path)
+
+
+@workflow_mcp.tool()
+async def retry_workflow(workflow_id: str, resume_subworkflow_tasks: bool = False) -> str:
+    """Retries a failed workflow execution from the last failed task.
+
+    Args:
+        workflow_id: The uuid representing the execution of the workflow to retry
+        resume_subworkflow_tasks: If True, resume any subworkflow tasks that were running
+    """
+    path = f"workflow/{workflow_id}/retry?resumeSubworkflowTasks={str(resume_subworkflow_tasks).lower()}"
+    return await http_post(path)
