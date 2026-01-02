@@ -72,7 +72,7 @@ async def update_task_status(
     workflow_instance_id: str,
     status: Literal["IN_PROGRESS", "FAILED", "FAILED_WITH_TERMINAL_ERROR", "COMPLETED"],
     output_data: Optional[Dict[str, Any]] = None,
-    logs: Optional[List[Dict[str, Any]]] = None
+    logs: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """Updates the status of a task execution. This is typically used by workers to update task status.
 

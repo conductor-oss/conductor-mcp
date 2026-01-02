@@ -30,8 +30,7 @@ async def get_event_handlers(event: Optional[str] = None, active_only: bool = Tr
     if event:
         params.append(f"event={event}")
     params.append(f"activeOnly={str(active_only).lower()}")
-    
+
     query_string = "&".join(params)
     path = f"event?{query_string}"
     return await http_get(path)
-

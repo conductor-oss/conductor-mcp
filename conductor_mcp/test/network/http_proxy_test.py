@@ -54,9 +54,7 @@ async def test_http_put_with_data(httpx_mock: HTTPXMock, monkeypatch):
     monkeypatch.setattr(token_manager, "get_token", mock_token_retriever)
     httpx_mock.add_response(url=TEST_URL + f"/somegarbageputurl", text="test_put_response")
 
-    result = await http_proxy.http_put(
-        "somegarbageputurl", data={"key": "value"}
-    )
+    result = await http_proxy.http_put("somegarbageputurl", data={"key": "value"})
 
     assert result == "test_put_response"
 

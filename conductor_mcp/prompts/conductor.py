@@ -24,7 +24,7 @@ prompt_mcp = FastMCP("Conductor Prompts")
 @prompt_mcp.prompt()
 def troubleshoot_workflow(workflow_id: str) -> str:
     """Troubleshoot a failed or stuck workflow.
-    
+
     Args:
         workflow_id: The workflow execution ID to troubleshoot
     """
@@ -42,7 +42,7 @@ Start by fetching the workflow status."""
 @prompt_mcp.prompt()
 def analyze_failures(workflow_name: Optional[str] = None, hours: int = 24) -> str:
     """Analyze recent workflow failures and identify patterns.
-    
+
     Args:
         workflow_name: Optional workflow name to filter by
         hours: Number of hours to look back (default: 24)
@@ -65,7 +65,7 @@ Start by querying for failed workflows."""
 @prompt_mcp.prompt()
 def create_workflow(workflow_name: str, description: str) -> str:
     """Guide to create a new workflow definition.
-    
+
     Args:
         workflow_name: Name for the new workflow
         description: Description of what the workflow does
@@ -94,7 +94,7 @@ Start by showing me existing workflows for reference."""
 @prompt_mcp.prompt()
 def monitor_workflow(workflow_id: str) -> str:
     """Monitor a running workflow execution.
-    
+
     Args:
         workflow_id: The workflow execution ID to monitor
     """
@@ -115,7 +115,7 @@ Provide a clear summary of the workflow's health and progress."""
 @prompt_mcp.prompt()
 def optimize_workflow(workflow_name: str) -> str:
     """Analyze a workflow for optimization opportunities.
-    
+
     Args:
         workflow_name: Name of the workflow to optimize
     """
@@ -134,4 +134,3 @@ Please:
 6. Provide before/after estimates if applicable
 
 Start by fetching the workflow definition."""
-
