@@ -9,7 +9,6 @@
 from typing import Literal, Dict, Any, Optional
 from fastmcp import FastMCP
 from conductor_mcp.network import http_proxy
-from conductor_mcp.network.http_proxy import http_put, http_delete, http_post
 
 workflow_mcp = FastMCP("Workflow Service")
 
@@ -283,7 +282,7 @@ async def pause_workflow(workflow_id: str) -> str:
         workflow_id: The uuid representing the execution of the workflow to pause
     """
     path = f"workflow/{workflow_id}/pause"
-    return await http_put(path)
+    return await http_proxy.http_put(path)
 
 
 @workflow_mcp.tool()
@@ -294,7 +293,7 @@ async def resume_workflow(workflow_id: str) -> str:
         workflow_id: The uuid representing the execution of the workflow to resume
     """
     path = f"workflow/{workflow_id}/resume"
-    return await http_put(path)
+    return await http_proxy.http_put(path)
 
 
 @workflow_mcp.tool()
@@ -307,7 +306,7 @@ async def terminate_workflow(workflow_id: str, reason: Optional[str] = None) -> 
     """
     reason_param = f"?reason={reason}" if reason else ""
     path = f"workflow/{workflow_id}{reason_param}"
-    return await http_delete(path)
+    return await http_proxy.http_delete(path)
 
 
 @workflow_mcp.tool()
@@ -319,7 +318,7 @@ async def restart_workflow(workflow_id: str, use_latest_definitions: bool = Fals
         use_latest_definitions: If True, use the latest workflow definition instead of the original version
     """
     path = f"workflow/{workflow_id}/restart?useLatestDefinitions={str(use_latest_definitions).lower()}"
-    return await http_post(path)
+    return await http_proxy.http_post(path)
 
 
 @workflow_mcp.tool()
@@ -331,4 +330,4 @@ async def retry_workflow(workflow_id: str, resume_subworkflow_tasks: bool = Fals
         resume_subworkflow_tasks: If True, resume any subworkflow tasks that were running
     """
     path = f"workflow/{workflow_id}/retry?resumeSubworkflowTasks={str(resume_subworkflow_tasks).lower()}"
-    return await http_post(path)
+    return await http_proxy.http_post(path)
