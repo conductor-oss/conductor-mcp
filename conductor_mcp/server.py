@@ -20,8 +20,8 @@ import click
 from conductor_mcp.utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
 
 mcp = FastMCP("oss-conductor")
-mcp.mount("workflow", workflow_mcp)
-mcp.mount("task", task_mcp)
+mcp.mount(workflow_mcp)
+mcp.mount(task_mcp)
 
 
 @click.command()
