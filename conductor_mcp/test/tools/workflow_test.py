@@ -36,6 +36,6 @@ async def test_start_workflow_by_name(args, expected, monkeypatch):
     mock_function = AsyncMock(return_value="mocked result")
     monkeypatch.setattr(http_proxy, "http_post", mock_function)
 
-    await workflow.start_workflow_by_name(**args)
+    await workflow.start_workflow_by_name.fn(**args)
 
     mock_function.assert_called_with(expected[0], {}, additional_headers=expected[1])
