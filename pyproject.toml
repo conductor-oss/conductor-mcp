@@ -16,7 +16,7 @@ dependencies = [
     "asyncio>=3.4.3",
     "black>=25.1.0",
     "click>=8.1.8",
-    "fastmcp==2.13.3",
+    "fastmcp==2.14.0",
     "freezegun>=1.5.1",
     "httpx>=0.28.1",
     "jsonschema>=4.25.1",
