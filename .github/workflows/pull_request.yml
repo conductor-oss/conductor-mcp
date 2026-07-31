@@ -7,8 +7,13 @@ on:
 
 jobs:
   pytest:
-    name: python
-    runs-on: ubuntu-latest
+    name: python (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v4
