@@ -10,10 +10,9 @@
 import json
 import logging
 import httpx
-import os
 from typing import Dict, Any
 from conductor_mcp.network import token_manager
-from conductor_mcp.utils.constants import CONDUCTOR_SERVER_URL
+from conductor_mcp.utils.urls import build_url
 
 
 logging.basicConfig(
@@ -27,7 +26,7 @@ async def http_get(resource_path: str):
     :param resource_path: The resource path to apply to the server's API endpoint
     :return: The results of the GET request
     """
-    full_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], resource_path)
+    full_url = build_url(resource_path)
     logging.debug(f"Requesting url: {full_url}")
     token = await token_manager.get_token()
     response = httpx.get(
@@ -44,7 +43,7 @@ async def http_post(resource_path: str, data: Dict[str, Any] = {}, additional_he
     :param additional_headers: A dictionary containing any additional key/values to add to the headers of the request
     :return: The results of the POST request
     """
-    full_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], resource_path)
+    full_url = build_url(resource_path)
     logging.debug(f"Requesting url: {full_url}")
     token = await token_manager.get_token()
     response = httpx.post(
@@ -67,7 +66,7 @@ async def http_put(resource_path: str, data: Dict[str, Any] = None, additional_h
     :param additional_headers: A dictionary containing any additional key/values to add to the headers of the request
     :return: The results of the PUT request
     """
-    full_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], resource_path)
+    full_url = build_url(resource_path)
     logging.debug(f"Requesting url: {full_url}")
     token = await token_manager.get_token()
     headers = {
@@ -89,7 +88,7 @@ async def http_delete(resource_path: str, additional_headers: Dict[str, str] = {
     :param additional_headers: A dictionary containing any additional key/values to add to the headers of the request
     :return: The results of the DELETE request
     """
-    full_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], resource_path)
+    full_url = build_url(resource_path)
     logging.debug(f"Requesting url: {full_url}")
     token = await token_manager.get_token()
     response = httpx.delete(
