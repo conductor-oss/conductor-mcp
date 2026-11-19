@@ -32,12 +32,14 @@ async def get_token():
     if time_since_last_retrieval > TOKEN_LIFE_DURATION:
         logging.info("Refreshing token")
         _last_token_retrieval = datetime.now()
-        token_url = os.path.join(os.environ[CONDUCTOR_SERVER_URL], "token")
-        response = httpx.post(
-            token_url,
-            headers={"Accept": "application/json", "Content-Type": "application/json"},
-            data=json.dumps({"keyId": os.environ[CONDUCTOR_AUTH_KEY], "keySecret": os.environ[CONDUCTOR_AUTH_SECRET]}),
-        )
+        base = os.environ[CONDUCTOR_SERVER_URL].rstrip("/")
+        token_url = f"{base}/token"
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                token_url,
+                headers={"Accept": "application/json", "Content-Type": "application/json"},
+                content=json.dumps({"keyId": os.environ[CONDUCTOR_AUTH_KEY], "keySecret": os.environ[CONDUCTOR_AUTH_SECRET]}),
+            )
         global _token
         _token = response.json()["token"]
     return _token

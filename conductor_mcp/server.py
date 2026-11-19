@@ -10,7 +10,6 @@ import json
 import os
 
 from fastmcp import FastMCP
-from pygments.lexer import default
 
 from conductor_mcp import local_development
 from conductor_mcp.tools.task import task_mcp
@@ -23,11 +22,11 @@ import click
 from conductor_mcp.utils.constants import CONDUCTOR_SERVER_URL, CONDUCTOR_AUTH_KEY, CONDUCTOR_AUTH_SECRET
 
 mcp = FastMCP("oss-conductor")
-mcp.mount("workflow", workflow_mcp)
-mcp.mount("task", task_mcp)
-mcp.mount("event", event_mcp)
-mcp.mount("resource", resource_mcp)
-mcp.mount("prompt", prompt_mcp)
+mcp.mount(workflow_mcp, prefix="workflow")
+mcp.mount(task_mcp, prefix="task")
+mcp.mount(event_mcp, prefix="event")
+mcp.mount(resource_mcp, prefix="resource")
+mcp.mount(prompt_mcp, prefix="prompt")
 
 
 @click.command()
