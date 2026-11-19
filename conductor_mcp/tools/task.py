@@ -16,7 +16,7 @@ task_mcp = FastMCP("Task Service")
 
 
 @task_mcp.tool()
-async def get_task_by_id(task_id: str, ctx: Context) -> str:
+async def get_task_by_id(task_id: str, ctx: Optional[Context] = None) -> str:
     """Gets the metadata for a conductor workflow task in json format based on that task's id
 
     Args:
